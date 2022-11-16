@@ -72,3 +72,22 @@ def coprime(a, b):
 
 if __name__ == "__main__":
     main()
+
+    n_value = 34453
+    e_value = 7
+
+    p_value = 263
+    q_value = 131
+ 
+    et_value = (p_value - 1) * (q_value - 1)
+    e_value = 7
+    d_value = pow(e_value, -1, et_value)
+
+
+    public_key = [e_value, n_value]
+    private_key = [d_value, n_value]
+
+    cipherText = [28907]
+    plainText = decrypt(cipherText, private_key)
+    print('D:', d_value)
+    print('Message', plainText)
