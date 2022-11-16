@@ -37,7 +37,8 @@ def main():
     cipherText = encrypt(payload, publicKey)
     plainText = decrypt(cipherText, privateKey)
 
-    print(plainText)
+    #Print Out the Output
+    print('p:', p_value, 'q:', q_value, 'n:', n_value, 'phi:', et_value, 'e:', e_value, 'd:', d_value, 'message:', payload[0], 'encrypted:', cipherText[0], 'decrypted:', plainText[0])
    
 
 #Given number n, we will find the three smallest coprimes
