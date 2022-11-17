@@ -21,15 +21,17 @@ def main():
     h_value = 19463 
 
     #Fill in the blanks:
-    g_value = int(math.pow(h_value, (p_value - 1) / q_value) % p_value)
+    g_value = g_value = pow(h_value, int((p_value - 1) / q_value), p_value)
     x_value = findValidPow(y_value, g_value, p_value, q_value)
 
     public_key = [p_value, q_value, g_value, y_value]
     private_key = [p_value, q_value, g_value, x_value]
 
-    print(getDigitalSig(h_value, private_key))
+    newSig = getDigitalSig(h_m, private_key, public_key)
+    print(newSig)
 
-    print(verifySig(h_m, givenSig, public_key))
+    print(verifySig(h_m, newSig, public_key))
+    print('x', x_value)
 
 #Will find a value y that satisfies val = pow(x, y, z) will pause once we hit the given upperbound
 def findValidPow(val, x, z, upperbound):
@@ -38,19 +40,23 @@ def findValidPow(val, x, z, upperbound):
             return y
     return -1 
 
-def getDigitalSig(message, key):
-    p_value = key[0]
-    q_value = key[1]
-    g_value = key[2]
-    x_value = key[3]
+def getDigitalSig(message, privateKey, publicKey):
+    p_value = privateKey[0]
+    q_value = privateKey[1]
+    g_value = privateKey[2]
+    x_value = privateKey[3]
 
-    h_value = message
-    k_value = 300
-    r_value = pow(g_value, k_value, p_value)
-    i_value = pow(k_value, -1, q_value)
-    s_value = i_value * (h_value + r_value * x_value) % q_value
+    for possible_k in range(1, q_value):
+        h_value = message
+        k_value = possible_k
+        r_value = pow(g_value, k_value, p_value)
+        i_value = pow(k_value, -1, q_value)
+        s_value = i_value * (h_value + r_value * x_value) % q_value
+        possible_sig = [r_value, s_value]
 
-    return [r_value, s_value]
+        if verifySig(h_value, possible_sig, publicKey):
+            print(possible_sig)
+            return possible_sig
 
 def verifySig(message, signature, key):
     h_value = message
@@ -70,13 +76,10 @@ def verifySig(message, signature, key):
 
     v_value =  (((pow(g_value,u1_value))*(pow(y_value,u2_value))) % p_value) % q_value
 
-    print(v_value)
     if v_value == r_value:
         return True
     
     return False
-
-
 
 
 if __name__ == "__main__":
